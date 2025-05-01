@@ -303,9 +303,9 @@ const projects = [
 export default function ProjectDetailPage() {
   const params = useParams()
   const { slug } = params
-  
+
   const project = projects.find((p) => p.slug === slug)
-  
+
   if (!project) {
     notFound()
   }
@@ -571,4 +571,186 @@ export default function ProjectDetailPage() {
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={resultsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-zinc-900/70 backdrop-blur-sm border border-zinc-800 rounded-xl p-6 relative overflow-hidden"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-full bg-cyan-500/20 text-cyan-400">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                    <p className="text-zinc-300">{result}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonial */}
+      <section ref={testimonialRef} className="w-full py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(34,211,238,0.08),transparent_70%)]" />
+
+        <div className="container relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={testimonialInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mx-auto"
+          >
+            <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-8 text-center">
+              Client
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
+                {" "}
+                Testimonial
+              </span>
+            </h2>
+
+            <div className="bg-zinc-900/70 backdrop-blur-sm border border-zinc-800 rounded-xl p-8 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(34,211,238,0.05),transparent_70%)]"></div>
+              <div className="text-5xl text-cyan-500/20 mb-4">"</div>
+              <p className="text-lg text-zinc-300 italic mb-6">{project.testimonial.quote}</p>
+              <div className="flex items-center gap-4">
+                <div className="p-1 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600">
+                  <div className="bg-zinc-900 p-1 rounded-full">
+                    <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-cyan-400">
+                      {project.testimonial.author.charAt(0)}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-medium text-white">{project.testimonial.author}</p>
+                  <p className="text-sm text-zinc-500">{project.testimonial.position}</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Related Projects */}
+      {relatedProjects.length > 0 && (
+        <section className="w-full py-16 bg-zinc-900/50 border-t border-zinc-800 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(34,211,238,0.08),transparent_70%)]" />
+
+          <div className="container relative">
+            <h2 className="font-heading text-3xl md:text-4xl font-bold text-white mb-8">
+              Related
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
+                {" "}
+                Projects
+              </span>
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedProjects.map((relatedProject) => (
+                <Link
+                  key={relatedProject.id}
+                  href={`/projects/${relatedProject.slug}`}
+                  className="group"
+                >
+                  <div className="relative overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/50 transition-all duration-300 group-hover:border-cyan-500/50 group-hover:shadow-[0_0_30px_rgba(34,211,238,0.15)]">
+                    <div className="relative h-48 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+                      <Image
+                        src={relatedProject.image || "/placeholder.svg"}
+                        alt={relatedProject.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    </div>
+                    <div className="p-6">
+                      <Badge className="mb-3 bg-cyan-500/90 hover:bg-cyan-600 text-white border-none">
+                        {relatedProject.category}
+                      </Badge>
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                        {relatedProject.title}
+                      </h3>
+                      <p className="text-zinc-400 text-sm line-clamp-2">{relatedProject.shortDescription}</p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Lightbox */}
+      {lightboxOpen && (
+        <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0" onClick={() => setLightboxOpen(false)} />
+          <div className="relative z-10 max-w-5xl w-full">
+            <button
+              onClick={() => setLightboxOpen(false)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-zinc-800/80 text-white hover:bg-zinc-700/80 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div className="relative">
+              <button
+                onClick={prevImage}
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-zinc-800/80 text-white hover:bg-zinc-700/80 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <Image
+                src={project.images[currentImageIndex] || "/placeholder.svg"}
+                alt={`${project.title} - Image ${currentImageIndex + 1}`}
+                width={1200}
+                height={800}
+                className="w-full h-auto max-h-[80vh] object-contain"
+              />
+              <button
+                onClick={nextImage}
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-zinc-800/80 text-white hover:bg-zinc-700/80 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+            <div className="text-center mt-4 text-zinc-400">
+              Image {currentImageIndex + 1} of {project.images.length}
+            </div>
+          </div>
+        </div>
+      )}
+    </main>
+  )
+}
